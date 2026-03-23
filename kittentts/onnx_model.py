@@ -87,7 +87,10 @@ class KittenTTS_1_Onnx:
         """
         self.model_path = model_path
         self.voices = np.load(voices_path) 
-        self.session = ort.InferenceSession(model_path)
+        opts = ort.SessionOptions()
+        opts.intra_op_num_threads = 1
+        opts.inter_op_num_threads = 1
+        self.session = ort.InferenceSession(model_path, sess_options=opts)
         
         self.phonemizer = phonemizer.backend.EspeakBackend(
             language="en-us", preserve_punctuation=True, with_stress=True
